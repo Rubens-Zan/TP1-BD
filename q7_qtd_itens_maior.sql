@@ -4,20 +4,23 @@ FROM
     (
         SELECT
             N_NAME,
-            COUNT() AS qtd
+            SUM(qtd_itens) AS total_itens
         from
             NATION
             LEFT JOIN (
                 SELECT
-                    C_NATIONKEY AS ORDERS_NATIONS
+                    C_NATIONKEY AS ORDERS_NATIONS,
+                    O_ORDERKEY AS ORDER_KEY,
+                    LINEITEM.L_QUANTITY AS qtd_itens
                 FROM
                     CUSTOMER
                     LEFT JOIN ORDERS ON C_CUSTKEY = O_CUSTKEY
+                    LEFT JOIN LINEITEM ON LINEITEM.L_ORDERKEY = ORDER_KEY
             ) ON NATION.N_NATIONKEY = ORDERS_NATIONS
         GROUP BY
             N_NATIONKEY
-        HAVING
-            qtd > 62000
-        ORDER BY
-            qtd DESC
-    );
+    )
+WHERE
+    total_itens > 62000
+ORDER BY
+    total_itens DESC;
