@@ -1,3 +1,4 @@
-SELECT 
+SELECT
     DISTINCT(P_TYPE)
-    from PART;
+from
+    PART;
